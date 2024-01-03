@@ -5,7 +5,7 @@ from django.contrib import messages
 
 # Create your views here.
 def UserDeposit(request):
-    profile = UserProfile.objects.get(user=request.user)
+    profile = UserProfile.objects.get(user=request.user.id)
     totalAmount = profile.account_balance
     if request.method == 'POST':
         form = DepositForm(request.POST )
@@ -14,7 +14,7 @@ def UserDeposit(request):
             if amount <= 0:
                 return redirect('deposit')
 
-            profile = UserProfile.objects.get(user=request.user)
+            profile = UserProfile.objects.get(user=request.user.id)
             profile.account_balance += amount
             profile.save()  
             messages.success(request,'Deposit successful')    
@@ -24,6 +24,6 @@ def UserDeposit(request):
     return render(request, 'deposit.html', {'form': form,'totalAmount': totalAmount})
 
 def UserProfileView(request):
-    user_profile = UserProfile.objects.get(user=request.user)
+    user_profile = UserProfile.objects.get(user=request.user.id)
     user_deposit = user_profile.account_balance
     return render(request, 'deposit.html', {'user_deposit': user_deposit})

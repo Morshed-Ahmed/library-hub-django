@@ -9,7 +9,7 @@ from .forms import ReviewForm
 
 # Create your views here.
 def HomeView(request,category_name = None):
-    profile = UserProfile.objects.get(user=request.user)
+    profile = UserProfile.objects.get(user=request.user.id)
     totalAmount = profile.account_balance
     data = Book.objects.all()
     brands = Category.objects.all()
