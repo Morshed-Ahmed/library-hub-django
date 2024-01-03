@@ -9,8 +9,11 @@ from .forms import ReviewForm
 
 # Create your views here.
 def HomeView(request,category_name = None):
-    profile = UserProfile.objects.get(user=request.user.id)
-    totalAmount = profile.account_balance
+    try:
+        profile = UserProfile.objects.get(user=request.user)
+        totalAmount = profile.account_balance
+    except:
+        totalAmount = None
     data = Book.objects.all()
     brands = Category.objects.all()
     if category_name == 'all':
