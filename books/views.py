@@ -20,25 +20,26 @@ def HomeView(request,category_name = None):
         data = Book.objects.all()
     elif category_name is not None:
         bt = Category.objects.get(name = category_name)
-        print(data)
         data = Book.objects.filter(category = bt)
-        print(data)
     return render(request,'books.html',{'data':data,'brands':brands,'totalAmount':totalAmount})
 
 
 def book_details(request,book_id):
-    profile = UserProfile.objects.get(user=request.user)
-    totalAmount = profile.account_balance
-    data = Book.objects.get(id = book_id)
-    review = Review.objects.filter(book = book_id)
-
     is_borrow = bool
-    borrow = Borrowed.objects.filter(user= profile.user,book= data)
-    if len(borrow) > 0:
-        is_borrow = True
-    else:
-        is_borrow = False
+    data = Book.objects.get(id = book_id)
 
+    try:
+        profile = UserProfile.objects.get(user=request.user)
+        totalAmount = profile.account_balance
+        borrow = Borrowed.objects.filter(user= profile.user,book= data)
+        if len(borrow) > 0:
+            is_borrow = True
+        else:
+            is_borrow = False
+    except:
+        totalAmount = None
+
+    review = Review.objects.filter(book = book_id)
     if request.method == 'POST':
         form = ReviewForm(request.POST)
         if form.is_valid():
@@ -46,26 +47,56 @@ def book_details(request,book_id):
             review.user = request.user
             review.book = data
             review.save()
-            return redirect('book_details', book_id=book_id)
+            return redirect('book_details', book_id)
     else:
         form = ReviewForm()
     return render(request,'book_details.html',{'data':data,'totalAmount':totalAmount,'form':form, 'review':review,'is_borrow':is_borrow})
 
 
 def Borrowed_book(request,book_id):
-    profile = UserProfile.objects.get(user=request.user)
-    totalAmount = profile.account_balance
     data = Book.objects.get(id = book_id)
-    if profile.account_balance >= data.price:
-        profile.account_balance -= data.price
-        profile.save()
+    try:
+        profile = UserProfile.objects.get(user=request.user)
+        totalAmount = profile.account_balance
 
-        new_borrowed = Borrowed()
-        new_borrowed.book = data
-        new_borrowed.user = request.user
-        new_borrowed.save()
-        messages.success(request,'Borrowed book success')
-    else:
-        messages.success(request,'Your account is low')
+        if profile.account_balance >= data.price:
+            profile.account_balance -= data.price
+            profile.save()
+
+            new_borrowed = Borrowed()
+            new_borrowed.book = data
+            new_borrowed.user = request.user
+            new_borrowed.save()
+            messages.success(request,'Borrowed book success')
+        else:
+            messages.success(request,'Your account is low')
+    except:
+        totalAmount = None
+    
     return redirect('book_details',data.id)
+
+
+
+# def Borrowed_book(request,book_id):
+#     profile = UserProfile.objects.get(user=request.user.id)
+#     # totalAmount = profile.account_balance
+
+#     try:
+#         # profile = UserProfile.objects.get(user=request.user)
+#         totalAmount = profile.account_balance
+#     except:
+#         totalAmount = None
+#     data = Book.objects.get(id = book_id)
+#     if profile.account_balance >= data.price:
+#         profile.account_balance -= data.price
+#         profile.save()
+
+#         new_borrowed = Borrowed()
+#         new_borrowed.book = data
+#         new_borrowed.user = request.user
+#         new_borrowed.save()
+#         messages.success(request,'Borrowed book success')
+#     else:
+#         messages.success(request,'Your account is low')
+#     return redirect('book_details',data.id)
 

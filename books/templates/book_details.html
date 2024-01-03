@@ -9,6 +9,8 @@
     <span class="font-semibold">Author: {{data.author}}</span>
     <h4 class="font-bold text-xl">{{data.price}}</h4>
     <h6 class="font-semibold">Category: {{data.category}}</h6>
+
+    {% if user.is_authenticated %}
     <a href="{% url 'borrowed_book' data.id%}">
       <button
         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-blue"
@@ -16,6 +18,16 @@
         Borrowed book
       </button>
     </a>
+    {% else %}
+    <a href="{% url 'borrowed_book' data.id%}">
+      <button
+        disabled
+        class="cursor-not-allowed bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-blue"
+      >
+        Borrowed book
+      </button>
+    </a>
+    {% endif %}
   </div>
 </div>
 
@@ -28,7 +40,6 @@
   <h1>{{rv.review}}</h1>
   {% endfor %}
 </div>
-
 {% if is_borrow %}
 <div>
   <div class="w-full mt-10">
