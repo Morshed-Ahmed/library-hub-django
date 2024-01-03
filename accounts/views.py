@@ -36,7 +36,15 @@ class UserProfileView1(TemplateView):
     template_name = 'accounts/profile.html'
 
 def UserProfileView(request):
-    profile = UserProfile.objects.get(user=request.user.id)
-    totalAmount = profile.account_balance
-    borrowed = Borrowed.objects.filter(user = profile.user)
+    # profile = UserProfile.objects.get(user=request.user.id)
+    # totalAmount = profile.account_balance
+    borrowed  = []
+    try:
+        profile = UserProfile.objects.get(user=request.user)
+        totalAmount = profile.account_balance
+        borrowed1 = Borrowed.objects.filter(user = profile.user)
+        borrowed = borrowed1
+
+    except:
+        totalAmount = None
     return render(request, 'accounts/profile.html', {'totalAmount': totalAmount,'borrowed':borrowed})
