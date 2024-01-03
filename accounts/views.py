@@ -36,7 +36,7 @@ class UserProfileView1(TemplateView):
     template_name = 'accounts/profile.html'
 
 def UserProfileView(request):
-    profile = UserProfile.objects.get(user=request.user)
+    profile = UserProfile.objects.get(user=request.user.id)
     totalAmount = profile.account_balance
     borrowed = Borrowed.objects.filter(user = profile.user)
     return render(request, 'accounts/profile.html', {'totalAmount': totalAmount,'borrowed':borrowed})
