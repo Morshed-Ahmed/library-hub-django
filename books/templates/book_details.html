@@ -1,0 +1,74 @@
+{% extends "core/base.html" %} {% load static %}
+<div></div>
+{% block content %}
+<div class="grid md:grid-cols-2 sm:grid-cols-1 p-5 gap-4 bg-gray-100 mt-10">
+  <img src="{{data.image.url}}" alt="" />
+  <div class="flex flex-col gap-4">
+    <h1 class="text-xl font-medium">{{data.title}}</h1>
+    <p>{{data.description}}</p>
+    <span class="font-semibold">Author: {{data.author}}</span>
+    <h4 class="font-bold text-xl">{{data.price}}</h4>
+    <h6 class="font-semibold">Category: {{data.category}}</h6>
+    <a href="{% url 'borrowed_book' data.id%}">
+      <button
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-blue"
+      >
+        Borrowed book
+      </button>
+    </a>
+  </div>
+</div>
+
+<div class="mt-6">
+  <h1 class="text-xl">Review of this book</h1>
+</div>
+<div class="shadow-md border border-gray-200 rounded px-8 pt-6 pb-8 mb-4">
+  {% for rv in review %}
+  <h3 class="text-lg font-bold">{{rv.user}}</h3>
+  <h1>{{rv.review}}</h1>
+  {% endfor %}
+</div>
+
+{% if is_borrow %}
+<div>
+  <div class="w-full mt-10">
+    <form
+      method="post"
+      class="shadow-md border border-gray-200 rounded px-8 pt-6 pb-8 mb-4"
+    >
+      {% csrf_token %} {% for hidden_field in form.hidden_fields %} {{
+      hidden_field.errors }} {{ hidden_field }} {% endfor %}
+      <div></div>
+      {% for field in form.visible_fields %}
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="{{ field.id_for_label }}"
+        >
+          {{ field.label }}
+        </label>
+
+        <textarea
+          class="shadow appearance-none border border-gray-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          name="{{ field.name }}"
+          id="{{ field.id_for_label }}"
+          cols="30"
+          rows="10"
+        ></textarea>
+      </div>
+      {% if field.errors %} {% for error in field.errors %}
+      <p class="text-red-600 text-sm italic pb-2">{{ error }}</p>
+      {% endfor %} {% endif %} {% endfor %}
+
+      <div class="w-full">
+        <button
+          class="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="submit"
+        >
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endif %} {% endblock %}
