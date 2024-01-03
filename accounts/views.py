@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth import login, logout
 from .models import UserProfile
 from books.models import Borrowed
+from django.contrib import messages
 
 # Create your views here.
 class UserLoginView(LoginView):
@@ -27,9 +28,13 @@ class UserRegisterView(FormView):
 
 class UserLogoutView(LogoutView):
     def get_success_url(self):
-        if self.request.user.is_authenticated:
-            logout(self.request)
+        messages.success(self.request, 'Logout successfully')
         return reverse_lazy('home')
+# class UserLogoutView(LogoutView):
+#     def get_success_url(self):
+#         if self.request.user.is_authenticated:
+#             logout(self.request)
+#         return reverse_lazy('home')
      
         
 class UserProfileView1(TemplateView):

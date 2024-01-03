@@ -27,7 +27,11 @@
             Your Balance: {{ totalAmount }}
           </h1>
           <a href="{% url 'profile' %}" class="text-white">Profile</a>
-          <a href="{% url 'logout' %}" class="text-white">Logout</a>
+
+          <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button class="text-white">Logout</button>
+          </form>
 
           {% else %}
 
