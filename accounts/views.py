@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.contrib.auth.views import LoginView,LogoutView
 from django.views.generic import FormView,TemplateView
 from .forms import RegisterUserForm
@@ -53,3 +53,12 @@ def UserProfileView(request):
     except:
         totalAmount = None
     return render(request, 'accounts/profile.html', {'totalAmount': totalAmount,'borrowed':borrowed})
+
+def ReturnBook(request,book_id):
+    borrowed = Borrowed.objects.get(id = book_id)
+    user = UserProfile.objects.get(id = request.user.id)
+    
+    user.account_balance = user.account_balance + borrowed.book.price
+    user.save()
+
+    return redirect('profile')

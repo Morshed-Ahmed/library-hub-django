@@ -6,6 +6,8 @@ from categories.models import Category
 from accounts.models import UserProfile
 from django.contrib import messages
 from .forms import ReviewForm
+from django.core.mail import send_mail,EmailMultiAlternatives
+from django.template.loader import render_to_string
 
 # Create your views here.
 def HomeView(request,category_name = None):
@@ -66,7 +68,23 @@ def Borrowed_book(request,book_id):
             new_borrowed = Borrowed()
             new_borrowed.book = data
             new_borrowed.user = request.user
+
+            email_subject = "Borrowed Confirmation"
+            email_body = render_to_string(
+                'borrowed_email.html',
+                {'book_name': data.title}
+            )
+            email = EmailMultiAlternatives(
+                subject=email_subject, body=email_body, to=[request.user.email]
+            )
+            email.attach_alternative(email_body, 'text/html')
+            email.send()
+            messages.success(request, ' Please check borrowed confirmation email.')
+
+
             new_borrowed.save()
+
+            
             messages.success(request,'Borrowed book success')
         else:
             messages.success(request,'Your account is low')

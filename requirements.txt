@@ -31,6 +31,7 @@ pyproject_hooks
 PyRect
 pyscreenshot
 PyScreeze
+python-environ
 pytweening
 requests
 setuptools-git-versioning

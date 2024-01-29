@@ -12,6 +12,7 @@
           <th class="py-2 px-4 border">Book Name</th>
           <th class="py-2 px-4 border">Book Price</th>
           <th class="py-2 px-4 border">Date</th>
+          <th class="py-2 px-4 border">Return</th>
         </tr>
       </thead>
       <tbody>
@@ -21,6 +22,15 @@
           <td class="py-2 px-4 border">{{br.book.title}}</td>
           <td class="py-2 px-4 border">{{br.book.price}}</td>
           <td class="py-2 px-4 border">{{br.created_on}}</td>
+          <td class="py-2 px-4 border">
+            <a href="{% url 'return' br.id %}">
+              <button
+                class="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              >
+                Pay
+              </button>
+            </a>
+          </td>
         </tr>
 
         {% endfor %}
