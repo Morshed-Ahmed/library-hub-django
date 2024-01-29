@@ -9,6 +9,7 @@ crispy-bootstrap5
 distlib
 Django
 django-crispy-forms
+django-environ
 EasyProcess
 entrypoint2
 filelock
